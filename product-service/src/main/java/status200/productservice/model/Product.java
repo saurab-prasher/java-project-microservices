@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Product")
+@Document("Products")
 @Data // Generates getters, setters, toString, equals, and hashCode methods
 public class Product {
     @Getter
