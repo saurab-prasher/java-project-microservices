@@ -1,19 +1,16 @@
-package status200.javaproject;
+package status200.imageservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
-
-
-
-@EnableEurekaServer
 @SpringBootApplication
-public class JavaProjectApplication {
+@EnableEurekaServer
+
+public class ImageServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JavaProjectApplication.class, args);
+        SpringApplication.run(ImageServiceApplication.class, args);
     }
 
 }
