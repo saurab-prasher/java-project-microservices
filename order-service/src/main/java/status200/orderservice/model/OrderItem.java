@@ -3,6 +3,7 @@ package status200.orderservice.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 
 @Document("OrderItems")
 public class OrderItem {
@@ -22,13 +23,13 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(String id, String orderId, String productId, String productName, Integer quantity, Double price) {
+    public OrderItem(String id, String orderId, String productId, String productName, Integer quantity, BigDecimal price) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
-        this.price = price;
+        this.price = price.doubleValue();
     }
 
     public String getId() {

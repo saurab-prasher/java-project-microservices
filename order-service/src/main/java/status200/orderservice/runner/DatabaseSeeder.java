@@ -29,8 +29,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         Order order1 = new Order(null, "customer1", "Transaction details 1", null);
         order1 = orderRepository.save(order1);
 
-        OrderItem item1 = new OrderItem(null, order1.getId(), "product1", "Product 1", 2, 69.99);
-        OrderItem item2 = new OrderItem(null, order1.getId(), "product2", "Product 2", 1, 49.99);
+        OrderItem item1 = new OrderItem(null, order1.getId(), "product1", "Product 1", 2, BigDecimal.valueOf(69.99));
+        OrderItem item2 = new OrderItem(null, order1.getId(), "product2", "Product 2", 1, BigDecimal.valueOf(49.99));
         List<OrderItem> items1 = Arrays.asList(item1, item2);
         orderItemRepository.saveAll(items1);
 
@@ -42,7 +42,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         Order order2 = new Order(null, "customer2", "Transaction details 2", null);
         order2 = orderRepository.save(order2);
 
-        OrderItem item3 = new OrderItem(null, order2.getId(), "product3", "Product 3", 3, 89.99);
+        OrderItem item3 = new OrderItem(null, order2.getId(), "product3", "Product 3", 3, BigDecimal.valueOf(89.99));
         List<OrderItem> items2 = Arrays.asList(item3);
         orderItemRepository.saveAll(items2);
 
@@ -56,7 +56,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             return BigDecimal.ZERO;
         }
         return items.stream()
-                .map(item -> BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

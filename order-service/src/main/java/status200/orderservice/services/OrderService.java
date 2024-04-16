@@ -16,7 +16,6 @@ import java.util.List;
 
 @Service
 public class OrderService {
-
     @Autowired
     private OrderRepository orderRepository;
 
@@ -25,6 +24,8 @@ public class OrderService {
 
     @Autowired
     private ProductService productService;
+
+
     @Transactional
     public Order placeOrder(String customerId, List<OrderItem> items) {
         BigDecimal totalPrice = BigDecimal.ZERO;
@@ -43,7 +44,7 @@ public class OrderService {
             BigDecimal price = BigDecimal.valueOf(product.getPrice()).multiply(BigDecimal.valueOf(item.getQuantity()));
             totalPrice = totalPrice.add(price);
 
-            orderItems.add(new OrderItem(null, null, item.getProductId(), product.getName(), item.getQuantity(), price.doubleValue()));
+            orderItems.add(new OrderItem(null, null, item.getProductId(), product.getName(), item.getQuantity(), price));
 
             // Update product stock
             productService.updateProductStock(item.getProductId(), product.getStock() - item.getQuantity());
