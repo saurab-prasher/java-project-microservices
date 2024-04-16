@@ -3,6 +3,7 @@ package status200.productservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+
 import org.springframework.stereotype.Service;
 import status200.productservice.model.Product;
 import status200.productservice.repository.ProductRepository;
@@ -10,11 +11,13 @@ import status200.productservice.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public Product createProduct(Product product) {
         return productRepository.save(product);
@@ -29,9 +32,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public ProductService() {
+    @Autowired
+    public ProductService(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 

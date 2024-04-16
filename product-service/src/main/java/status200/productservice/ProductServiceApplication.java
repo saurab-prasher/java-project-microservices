@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "status200.productservice.repository")
 public class ProductServiceApplication {
 
 	public static void main(String[] args) {

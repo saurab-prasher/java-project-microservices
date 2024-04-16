@@ -6,9 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@SpringBootApplication
+
 @EnableDiscoveryClient
 @EnableMongoRepositories
+@SpringBootApplication(scanBasePackages = {"status200.orderservice", "status200.productservice"})
 public class OrderServiceApplication {
 
 	public static void main(String[] args) {
