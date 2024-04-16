@@ -9,6 +9,7 @@ import status200.orderservice.model.OrderItem;
 import status200.orderservice.repository.OrderItemRepository;
 import status200.orderservice.repository.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         List<OrderItem> items1 = Arrays.asList(item1, item2);
         orderItemRepository.saveAll(items1);
 
+        order1.setItems(items1);
+        order1.setTotalPrice(calculateTotalPrice(items1));
+        orderRepository.save(order1);
+
         // Sample Order 2
         Order order2 = new Order(null, "customer2", "Transaction details 2", null);
         order2 = orderRepository.save(order2);
@@ -40,5 +45,18 @@ public class DatabaseSeeder implements CommandLineRunner {
         OrderItem item3 = new OrderItem(null, order2.getId(), "product3", "Product 3", 3, 89.99);
         List<OrderItem> items2 = Arrays.asList(item3);
         orderItemRepository.saveAll(items2);
+
+        order2.setItems(items2);
+        order2.setTotalPrice(calculateTotalPrice(items2));
+        orderRepository.save(order2);
+    }
+
+    private BigDecimal calculateTotalPrice(List<OrderItem> items) {
+        if (items == null) {
+            return BigDecimal.ZERO;
+        }
+        return items.stream()
+                .map(item -> BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

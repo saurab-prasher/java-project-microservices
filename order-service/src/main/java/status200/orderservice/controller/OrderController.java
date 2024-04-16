@@ -11,11 +11,9 @@ import status200.orderservice.model.Order;
 
 import status200.orderservice.repository.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
-
-
 
 @RestController
 @RequestMapping("/orders")
@@ -37,7 +35,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         LOGGER.info("Creating order: {}", order);
-        double totalPrice = calculateTotalPrice(order);
+        BigDecimal totalPrice = calculateTotalPrice(order);
         order.setTotalPrice(totalPrice);
         Order savedOrder = orderRepository.save(order);
         LOGGER.info("Order created: {}", savedOrder);
@@ -57,7 +55,7 @@ public class OrderController {
         LOGGER.info("Updating order with id: {}", id);
         Optional<Order> order = orderRepository.findById(id);
         return order.map(value -> {
-            double totalPrice = calculateTotalPrice(updatedOrder);
+            BigDecimal totalPrice = calculateTotalPrice(updatedOrder);
             updatedOrder.setTotalPrice(totalPrice);
             updatedOrder.setId(id);
             orderRepository.save(updatedOrder);
@@ -74,12 +72,12 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private double calculateTotalPrice(Order order) {
+    private BigDecimal calculateTotalPrice(Order order) {
         if (order.getItems() == null || order.getItems().isEmpty()) {
-            return 0.0;
+            return BigDecimal.ZERO;
         }
         return order.getItems().stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+                .map(item -> BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

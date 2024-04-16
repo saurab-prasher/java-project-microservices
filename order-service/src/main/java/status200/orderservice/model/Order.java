@@ -3,8 +3,8 @@ package status200.orderservice.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.List;
-
 
 @Document("Orders")
 public class Order {
@@ -13,7 +13,7 @@ public class Order {
 
     private String customerId;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     private String transactionDetails;
 
@@ -50,11 +50,11 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -75,10 +75,13 @@ public class Order {
         this.totalPrice = calculateTotalPrice();
     }
 
-    public Double calculateTotalPrice() {
-        return items.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                .sum();
+    public BigDecimal calculateTotalPrice() {
+        if (this.items == null) {
+            return BigDecimal.ZERO;
+        }
+        return this.items.stream()
+                .map(item -> BigDecimal.valueOf(item.getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

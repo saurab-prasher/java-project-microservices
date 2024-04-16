@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import status200.productservice.model.Product;
 import status200.productservice.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,9 @@ public class OrderService {
 
     @Autowired
     private ProductService productService;
-
     @Transactional
     public Order placeOrder(String customerId, List<OrderItem> items) {
-        double totalPrice = 0.0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (OrderItem item : items) {
@@ -40,10 +40,10 @@ public class OrderService {
                 throw new RuntimeException("Not enough stock for product " + product.getName());
             }
 
-            double price = product.getPrice() * item.getQuantity();
-            totalPrice += price;
+            BigDecimal price = BigDecimal.valueOf(product.getPrice()).multiply(BigDecimal.valueOf(item.getQuantity()));
+            totalPrice = totalPrice.add(price);
 
-            orderItems.add(new OrderItem(null, null, item.getProductId(), product.getName(), item.getQuantity(), price));
+            orderItems.add(new OrderItem(null, null, item.getProductId(), product.getName(), item.getQuantity(), price.doubleValue()));
 
             // Update product stock
             productService.updateProductStock(item.getProductId(), product.getStock() - item.getQuantity());
