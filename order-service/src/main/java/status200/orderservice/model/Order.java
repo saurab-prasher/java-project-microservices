@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+
 @Document("Orders")
 public class Order {
     @Id
@@ -79,7 +80,6 @@ public class Order {
                 .mapToDouble(item -> item.getPrice() * item.getQuantity())
                 .sum();
     }
-
 
     @Override
     public String toString() {

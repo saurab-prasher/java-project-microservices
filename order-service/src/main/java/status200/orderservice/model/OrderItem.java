@@ -1,17 +1,15 @@
 package status200.orderservice.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Document("OrderItems")
 public class OrderItem {
-
     @Id
     private String id;
 
-    @DBRef
-    private Order order;
+    private String orderId;  // Changed to orderId to store the order id
 
     private String productId;
 
@@ -24,9 +22,9 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(String id, Order order, String productId, String productName, Integer quantity, Double price) {
+    public OrderItem(String id, String orderId, String productId, String productName, Integer quantity, Double price) {
         this.id = id;
-        this.order = order;
+        this.orderId = orderId;
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
@@ -41,12 +39,12 @@ public class OrderItem {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getProductId() {
@@ -85,7 +83,7 @@ public class OrderItem {
     public String toString() {
         return "OrderItem{" +
                 "id='" + id + '\'' +
-                ", order=" + order +
+                ", orderId='" + orderId + '\'' +
                 ", productId='" + productId + '\'' +
                 ", productName='" + productName + '\'' +
                 ", quantity=" + quantity +
