@@ -1,6 +1,8 @@
 package status200.productservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import status200.productservice.model.Product;
 import status200.productservice.repository.ProductRepository;
@@ -27,6 +29,26 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    public ProductService(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public Product getProductById(String id) {
+        // Send a request to get product by ID
+        kafkaTemplate.send("get-product", id);
+        // Logic to handle response will be handled by Kafka listener
+        return null;
+    }
+
+    public void updateProductStock(String id, Integer quantity) {
+        // Send a request to update product stock
+        String message = id + "," + quantity.toString();
+        kafkaTemplate.send("update-product-stock", message);
+    }
+
+
     public void deleteProduct(String id) {
         productRepository.deleteById(id);
     }
@@ -39,6 +61,27 @@ public class ProductService {
         product.setImageId(productDetails.getImageId());
         product.setStock(productDetails.getStock());
         return productRepository.save(product);
+    }
+
+
+    @KafkaListener(topics = "get-product-response", groupId = "order-service-group", containerFactory = "kafkaListenerContainerFactory")
+    public void getProductResponse(String productJson) {
+        // Parse productJson to Product object and return
+    }
+
+    @KafkaListener(topics = "get-all-products-response", groupId = "order-service-group", containerFactory = "kafkaListenerContainerFactory")
+    public void getAllProductsResponse(List<Product> products) {
+        // Handle the list of products
+    }
+
+    @KafkaListener(topics = "create-product-response", groupId = "order-service-group", containerFactory = "kafkaListenerContainerFactory")
+    public void createProductResponse(Product product) {
+        // Handle the created product
+    }
+
+    @KafkaListener(topics = "update-product-response", groupId = "order-service-group", containerFactory = "kafkaListenerContainerFactory")
+    public void updateProductResponse(Product product) {
+        // Handle the updated product
     }
 
 
