@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "orders")
+@Document("Orders")
 public class Order {
     @Id
     private String id;
@@ -18,16 +18,20 @@ public class Order {
 
     private List<OrderItem> items;
 
+    // Constructors, getters, setters, and other methods
+
     public Order() {
     }
 
-    public Order(String id, String customerId, Double totalPrice, String transactionDetails, List<OrderItem> items) {
+    public Order(String id, String customerId, String transactionDetails, List<OrderItem> items) {
         this.id = id;
         this.customerId = customerId;
-        this.totalPrice = totalPrice;
         this.transactionDetails = transactionDetails;
         this.items = items;
+        this.totalPrice = calculateTotalPrice();
     }
+
+    // Getters and Setters
 
     public String getId() {
         return id;
@@ -67,7 +71,15 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+        this.totalPrice = calculateTotalPrice();
     }
+
+    public Double calculateTotalPrice() {
+        return items.stream()
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .sum();
+    }
+
 
     @Override
     public String toString() {
