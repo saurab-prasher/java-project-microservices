@@ -31,5 +31,15 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    // Additional methods like update can also be defined here
+    public Product updateProduct(String id, Product productDetails) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setName(productDetails.getName());
+        product.setDescription(productDetails.getDescription());
+        product.setPrice(productDetails.getPrice());
+        product.setImageId(productDetails.getImageId());
+        product.setStock(productDetails.getStock());
+        return productRepository.save(product);
+    }
+
+
 }

@@ -38,5 +38,9 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    // Additional endpoints like update can also be added
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable String id, @RequestBody Product productDetails) {
+        return productService.updateProduct(id, productDetails);
+    }
+
 }
