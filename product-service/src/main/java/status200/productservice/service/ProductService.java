@@ -31,7 +31,7 @@ public class ProductService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public ProductService(KafkaTemplate<String, String> kafkaTemplate) {
+    public ProductService() {
         this.kafkaTemplate = kafkaTemplate;
     }
 
