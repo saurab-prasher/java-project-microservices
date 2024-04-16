@@ -6,6 +6,7 @@ import status200.adminservice.model.User;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class MyUserPrincipal implements UserDetails {
     private User user;
@@ -16,8 +17,9 @@ public class MyUserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Assuming every user is an 'ADMIN' for simplicity
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
     }
 
     @Override

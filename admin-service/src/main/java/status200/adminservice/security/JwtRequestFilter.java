@@ -19,12 +19,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 import java.io.IOException;
-
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -38,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.extractUsername(jwtToken);
@@ -50,9 +46,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            // Load user details using UserDetailsService provided by Spring's security context
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if (jwtTokenUtil.validateToken(jwtToken, String.valueOf(userDetails))) {
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails.getUsername()))  {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -62,7 +59,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
-
-
-
 }

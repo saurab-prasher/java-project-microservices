@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -13,7 +14,12 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class AdminServiceApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(AdminServiceApplication.class, args);
+
+
     }
+
+
 
 }
