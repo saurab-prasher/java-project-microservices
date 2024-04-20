@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import status200.orderservice.model.Order;
-
-
 import status200.orderservice.repository.OrderRepository;
 
 import java.math.BigDecimal;
@@ -24,6 +22,7 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
+    // Endpoint to fetch all orders
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         LOGGER.info("Fetching all orders...");
@@ -32,6 +31,7 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
+    // Endpoint to create a new order
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         LOGGER.info("Creating order: {}", order);
@@ -42,6 +42,7 @@ public class OrderController {
         return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
 
+    // Endpoint to fetch an order by its ID
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
         LOGGER.info("Fetching order by id: {}", id);
@@ -50,6 +51,7 @@ public class OrderController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Endpoint to update an existing order
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable String id, @RequestBody Order updatedOrder) {
         LOGGER.info("Updating order with id: {}", id);
@@ -64,6 +66,7 @@ public class OrderController {
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Endpoint to delete an order by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable String id) {
         LOGGER.info("Deleting order with id: {}", id);
@@ -72,6 +75,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Method to calculate the total price of an order
     private BigDecimal calculateTotalPrice(Order order) {
         if (order.getItems() == null || order.getItems().isEmpty()) {
             return BigDecimal.ZERO;
