@@ -17,27 +17,32 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // Endpoint to create a new product
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.createProduct(product));
     }
 
+    // Endpoint to get a product by its ID
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Product>> getProductById(@PathVariable String id) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
+    // Endpoint to get all products
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    // Endpoint to delete a product by its ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
+    // Endpoint to update a product by its ID
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable String id, @RequestBody Product productDetails) {
         return productService.updateProduct(id, productDetails);
