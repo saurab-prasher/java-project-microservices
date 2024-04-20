@@ -16,7 +16,6 @@ import status200.adminservice.model.JwtResponse;
 import status200.adminservice.security.JwtTokenUtil;
 import status200.adminservice.service.CustomUserDetailsService;
 
-
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
@@ -30,24 +29,32 @@ public class AuthenticationController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    // Endpoint to authenticate user credentials and generate JWT token
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        // Authenticate user credentials
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        // Load user details by username
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        
+        // Generate JWT token
         final String token = jwtTokenUtil.generateToken(userDetails.getUsername());
 
-
+        // Return the JWT token as response
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    // Method to authenticate user credentials
     private void authenticate(String username, String password) throws Exception {
         try {
+            // Perform authentication using Spring Security AuthenticationManager
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
+            // Throw exception if user account is disabled
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
+            // Throw exception if credentials are invalid
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
